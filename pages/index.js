@@ -13,7 +13,10 @@ export default function Home({ data }) {
       </Head>
 
       <main className={styles.main}>
-        <NowShowing data={data}/>
+        <h1 className="text-3xl font-bold underline">
+          Hello world!
+        </h1>
+        {/* <NowShowing data={data} /> */}
       </main>
     </div>
   )
