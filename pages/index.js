@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import NowShowing from './components/NowShowing';
 
 export default function Home({ data }) {
   return (
@@ -12,14 +13,14 @@ export default function Home({ data }) {
       </Head>
 
       <main className={styles.main}>
-        {data.name}
+        <NowShowing data={data}/>
       </main>
     </div>
   )
 }
 
-export async function getStaticProps() {
-  const response = await fetch("http://localhost:3000/api/hello");
+export async function getServerSideProps() {
+  const response = await fetch("https://cinestar.pk/Browsing/Home/NowShowing");
   const data = await response.json();
   return {
     props: { data: data }
