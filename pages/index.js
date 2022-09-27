@@ -2,8 +2,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import NowShowing from './components/NowShowing';
+import axios from 'axios';
 
-export default function Home({ data }) {
+export default function Home(data) {
   return (
     <div className={styles.container}>
       <Head>
@@ -16,16 +17,26 @@ export default function Home({ data }) {
         <h1 className="text-3xl font-bold underline">
           Hello world!
         </h1>
-        {/* <NowShowing data={data} /> */}
+        <NowShowing data={data} />
       </main>
     </div>
   )
 }
 
 export async function getServerSideProps() {
-  const response = await fetch("https://cinestar.pk/Browsing/Home/NowShowing");
-  const data = await response.json();
+  const cinestar = axios({
+    method: 'GET',
+    url: 'https://cinestar.pk/Browsing/Home/NowShowing'
+  });
+  const universalCinemas = axios({
+    method: 'GET',
+    url: 'https://universalcinemas.com/lahore/'
+  });
+  const [cinestarData, univCinemaData] = await Promise.all([
+    cinestar, universalCinemas
+  ]);
   return {
-    props: { data: data }
+    props: { cinestar: cinestarData.data, universalCinemas: univCinemaData.data }
   };
+
 }
