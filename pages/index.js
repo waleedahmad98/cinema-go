@@ -3,6 +3,7 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import NowShowing from './components/NowShowing';
 import axios from 'axios';
+import { data } from 'autoprefixer';
 
 export default function Home(data) {
   return (
@@ -24,6 +25,7 @@ export default function Home(data) {
 }
 
 export async function getServerSideProps() {
+  // currently for lahore only
   const cinestar = axios({
     method: 'GET',
     url: 'https://cinestar.pk/Browsing/Home/NowShowing'
@@ -32,11 +34,25 @@ export async function getServerSideProps() {
     method: 'GET',
     url: 'https://universalcinemas.com/lahore/'
   });
-  const [cinestarData, univCinemaData] = await Promise.all([
-    cinestar, universalCinemas
+  const cueCinemas = axios({
+    method: 'POST',
+    url: 'https://cuecinemas.com/Browsing/Home/NowShowing'
+  });
+  const cinepax = axios({
+    method: 'POST',
+    url: 'https://www.cinepax.com/Home/GetNowShowingImages',
+    data: {
+      "strCityId": "4",
+      "strLanguage": "0"
+    }
+  });
+  
+  
+  const [cinestarData, univCinemaData, cueCinemasData, cinepaxData] = await Promise.all([
+    cinestar, universalCinemas, cueCinemas, cinepax
   ]);
   return {
-    props: { cinestar: cinestarData.data, universalCinemas: univCinemaData.data }
+    props: { cinestar: cinestarData.data, universalCinemas: univCinemaData.data, cueCinemas: cueCinemasData.data, cinepax: cinepaxData.data }
   };
 
 }
